@@ -1009,7 +1009,7 @@
           emptyCopy.textContent = "APIキーや入力内容を見直して、もう一度お試しください。";
           setStatus("生成できませんでした", "", "");
           if (error && error.name === "AbortError") showError("生成を中止したか、制限時間を超えました。文章を短くして再試行してください。");
-          else if (error instanceof TypeError) showError("Gemini APIへ接続できませんでした。インターネット接続とAPIキーを確認してください。");
+          else if (error instanceof TypeError) showError("Google APIへの通信がブラウザで失敗しました。キーを作った直後でも、API制限・ウェブサイト制限や通信環境で失敗することがあります。Google AI Studio / Cloud Consoleで「Generative Language API」が許可されているか確認してください。ウェブサイト制限を設定している場合は kuurenu.github.io を許可し、VPNやコンテンツブロッカーを使っている場合は一時停止して再試行してください。");
           else showError(error && error.message ? error.message : "予期しないエラーが発生しました。");
         } finally {
           window.clearTimeout(timeoutId);
