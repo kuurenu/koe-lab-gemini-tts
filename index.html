@@ -583,9 +583,9 @@
         const clean = (message || "").replace(/AIza[\w-]{20,}/g, "[APIキー]");
         if (status === 401 || status === 403) return "APIキーを確認してください。Gemini APIが有効なキーか、Google AI Studioで利用できる設定かを確認してください。";
         if (status === 429) return "APIの利用上限に達したようです。少し時間を置くか、Google AI Studioで利用状況を確認してください。";
-        if (status === 400) return "リクエストを受け付けられませんでした。文章を短くするか、声・モデル・演出の組み合わせを見直してください。" + (clean ? "\n詳細: " + clean : "");
+        if (status === 400) return "Google APIからHTTP 400が返りました。入力・モデル・音声形式を確認してください。" + (clean ? "\n詳細: " + clean : "");
         if (status >= 500) return "Gemini API側で一時的なエラーが発生しました。少し待ってから再試行してください。";
-        return clean || "音声を生成できませんでした。APIキーと入力内容を確認してください。";
+        return clean || "Google APIからHTTP " + status + "が返りました。";
       }
       function getModelLabel() {
         return modelSelect.options[modelSelect.selectedIndex].text.split("（")[0];
@@ -821,6 +821,7 @@
         const body = {
           model: model,
           input: [{ type: "user_input", content: inputItems }],
+          store: false,
           response_format: {
             type: "audio",
             mime_type: mimeTypes[audioFormat] || "audio/wav",
