@@ -8,7 +8,7 @@ A Japanese, single-page playground for trying Gemini text-to-speech. It is built
 - Single-speaker narration and two-speaker dialogue, including a separate voice and delivery style for each speaker
 - Sustained delivery directions, inline vocal tags, and sample scripts
 - Inline pause / breath / laugh tags and pipe-delimited backchannels for overlapping dialogue
-- 30 prebuilt voices, the Extended Voice Library, and existing Voice Design / Voice Replication IDs
+- All 30 prebuilt voices, the Extended Voice Library with language, region, accent, gender, pitch, persona, context, type, and keyword filters, and existing Voice Design / Voice Replication IDs
 - WAV, Linear PCM, μ-law, and A-law output, with 24 kHz, 16 kHz, or 8 kHz sample rates on Gemini 3.8
 - Streaming audio reception, cancel, in-page playback, and download
 
