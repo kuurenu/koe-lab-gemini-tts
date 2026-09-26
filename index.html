@@ -420,6 +420,10 @@
               <input id="voice-language" type="text" placeholder="言語コード (ja-JP)" aria-label="言語コード">
             </div>
             <div class="library-filters" style="margin-top:7px">
+              <input id="voice-region" type="text" placeholder="地域コード (US / GB)" aria-label="地域コード">
+              <input id="voice-persona" type="text" placeholder="ペルソナ (Narrator)" aria-label="ボイスのペルソナ">
+            </div>
+            <div class="library-filters" style="margin-top:7px">
               <div class="select-wrap"><select id="voice-type" aria-label="ボイスの種類"><option value="">すべての種類</option><option value="prebuilt">標準ボイス</option><option value="prompted">Voice Design</option><option value="replicated">Voice Replication</option></select></div>
               <div class="select-wrap"><select id="voice-target" aria-label="ボイスの適用先"><option value="single">ひとり語り</option><option value="A">会話 A</option><option value="B">会話 B</option></select></div>
             </div>
@@ -1034,6 +1038,8 @@
           const params = new URLSearchParams({ page_size: "50" });
           const search = byId("voice-search").value.trim();
           const language = byId("voice-language").value.trim();
+          const region = byId("voice-region").value.trim();
+          const persona = byId("voice-persona").value.trim();
           const type = byId("voice-type").value;
           const gender = byId("voice-gender").value;
           const pitch = byId("voice-pitch").value;
@@ -1041,6 +1047,8 @@
           const accent = byId("voice-accent").value.trim();
           if (search) params.set("search", search);
           if (language) params.set("language_code", language);
+          if (region) params.set("region_code", region);
+          if (persona) params.set("persona", persona);
           if (type) params.set("type", type);
           if (gender) params.set("gender", gender);
           if (pitch) params.set("pitch", pitch);
