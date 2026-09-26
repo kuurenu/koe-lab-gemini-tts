@@ -482,6 +482,8 @@
       const sampleRateSelect = byId("sample-rate");
       const streamCheckbox = byId("stream-mode");
       const generateButton = byId("generate-button");
+      const copyTextButton = byId("copy-text-button");
+      const copyTextLabel = copyTextButton.lastChild;
       const countLabel = byId("char-count");
       const statusDot = byId("status-dot");
       const statusTitle = byId("status-title");
@@ -1155,8 +1157,8 @@
       copyTextButton.addEventListener("click", async function () {
         try {
           await navigator.clipboard.writeText(transcriptInput.value);
-          copyTextButton.textContent = "コピーしました";
-          window.setTimeout(function () { copyTextButton.textContent = "文章をコピー"; }, 1500);
+          copyTextLabel.nodeValue = "コピーしました";
+          window.setTimeout(function () { copyTextLabel.nodeValue = "文章をコピー"; }, 1500);
         } catch (_) {
           transcriptInput.focus();
           transcriptInput.select();
