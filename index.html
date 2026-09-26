@@ -1,0 +1,1066 @@
+Warning: truncated output (original token count: 20117)
+Total output lines: 1177
+
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0e0c">
+  <meta name="description" content="Gemini Flash TTSで、テキストを声にして試せる日本語のシンプルなプレイグラウンド。">
+  <title>Koe Lab — Gemini TTS Playground</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0e0c;
+      --panel: #121713;
+      --panel-raised: #171e19;
+      --line: #28332b;
+      --text: #f0f5ef;
+      --muted: #9ba99c;
+      --dim: #6f7d71;
+      --lime: #c4f27c;
+      --lime-ink: #14200d;
+      --mint: #91dbc2;
+      --danger: #ff9c90;
+      --shadow: 0 24px 70px rgba(0, 0, 0, .24);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 82% 5%, rgba(112, 153, 94, .14), transparent 29rem),
+        radial-gradient(ellipse at 5% 45%, rgba(58, 112, 95, .08), transparent 30rem),
+        var(--bg);
+    }
+    button, input, select, textarea { font: inherit; }
+    a { color: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; min-height: 76px; border-bottom: 1px solid rgba(255,255,255,.07); }
+    .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; font-size: 14px; font-weight: 760; letter-spacing: .06em; }
+    .brand-mark { display: grid; width: 31px; height: 31px; place-items: center; border-radius: 10px; color: var(--lime-ink); background: var(--lime); box-shadow: 0 0 26px rgba(196,242,124,.16); }
+    .brand-mark svg { width: 18px; height: 18px; }
+    .top-links { display: flex; align-items: center; gap: 18px; color: var(--muted); font-size: 12px; }
+    .top-links a { text-decoration: none; transition: color .18s ease; }
+    .top-links a:hover { color: var(--lime); }
+    .top-pill { display: inline-flex; align-items: center; gap: 7px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 99px; color: #c4d0c3; background: rgba(255,255,255,.025); }
+    .top-pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 12px var(--lime); }
+    .hero { display: flex; align-items: center; justify-content: space-between; gap: 34px; padding: 55px 0 36px; }
+    .eyebrow, .mini-label { color: var(--mint); font-size: 10px; font-weight: 750; letter-spacing: .17em; text-transform: uppercase; }
+    h1 { margin: 13px 0 12px; font-size: clamp(32px, 5vw, 52px); line-height: 1.12; letter-spacing: -.055em; }
+    h1 span { color: var(--lime); }
+    .hero-copy { max-width: 610px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.9; }
+    .hero-art { position: relative; display: flex; flex: 0 0 230px; height: 120px; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(196,242,124,.15); border-radius: 20px; background: linear-gradient(135deg, rgba(196,242,124,.07), rgba(145,219,194,.025)); }
+    .hero-art::before, .hero-art::after { position: absolute; content: ""; width: 145px; height: 145px; border: 1px solid rgba(196,242,124,.12); border-radius: 50%; }
+    .hero-art::after { width: 190px; height: 190px; }
+    .wave-mark { z-index: 1; display: flex; height: 46px; align-items: center; gap: 4px; }
+    .wave-mark i { display: block; width: 3px; border-radius: 4px; background: var(--lime); opacity: .9; animation: pulse 1.2s ease-in-out infinite alternate; }
+    .wave-mark i:nth-child(4n+1) { height: 13px; animation-delay: -.7s; }
+    .wave-mark i:nth-child(4n+2) { height: 27px; animation-delay: -.35s; }
+    .wave-mark i:nth-child(4n+3) { height: 40px; animation-delay: -.9s; }
+    .wave-mark i:nth-child(4n) { height: 19px; animation-delay: -.2s; }
+    @keyframes pulse { to { transform: scaleY(.48); opacity: .48; } }
+    .app-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(290px, .8fr); align-items: start; gap: 17px; }
+    .panel { border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(155deg, rgba(24,31,25,.97), rgba(17,22,18,.98)); box-shadow: var(--shadow); }
+    .compose-panel { padding: 24px; }
+    .settings-panel { padding: 22px; }
+    .panel-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 19px; }
+    .panel-heading h2 { margin: 5px 0 0; font-size: 17px; letter-spacing: -.02em; }
+    .step-number { display: grid; width: 31px; height: 31px; flex: 0 0 auto; place-items: center; border: 1px solid var(--line); border-radius: 10px; color: var(--lime); font-size: 11px; font-weight: 800; }
+    .samples { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .samples-caption { margin-right: 2px; color: var(--dim); font-size: 11px; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 6px 10px; border: 1px solid #303b32; border-radius: 999px; color: #c2cdc1; background: #171e19; font-size: 11px; transition: border-color .15s ease, color .15s ease, background .15s ease; }
+    .chip:hover, .chip.active { border-color: rgba(196,242,124,.53); color: var(--lime); background: rgba(196,242,124,.07); }
+    .field-label { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 15px 0 8px; color: #dce5db; font-size: 12px; font-weight: 650; }
+    .field-hint { color: var(--dim); font-size: 10px; font-weight: 450; }
+    textarea, input[type="text"], input[type="password"], select {
+      width: 100%; border: 1px solid #303b32; border-radius: 11px; outline: none; color: var(--text); background: #0d120f; transition: border-color .18s ease, box-shadow .18s ease;
+    }
+    textarea:focus, input:focus, select:focus { border-color: rgba(196,242,124,.68); box-shadow: 0 0 0 3px rgba(196,242,124,.08); }
+    textarea { display: block; min-height: 206px; padding: 14px; resize: vertical; font-size: 13px; line-height: 1.85; }
+    textarea::placeholder, input::placeholder { color: #5e6a60; }
+    .counter-row { display: flex; align-items: center; justify-content: space-between; margin: 7px 2px 0; color: var(--dim); font-size: 10px; }
+    .style-presets { display: flex; flex-wrap: wrap; gap: 7px; margin: 3px 0 9px; }
+    .style-chip { padding: 6px 9px; border: 1px solid #2c372e; border-radius: 8px; color: #aebbae; background: #141a15; font-size: 10px; }
+    .style-chip:hover { border-color: #6f9149; color: var(--lime); }
+    .style-area { min-height: 76px; font-size: 12px; }
+    .mode-switch { display: flex; gap: 6px; margin: -3px 0 15px; padding: 4px; border: 1px solid #28332b; border-radius: 11px; background: #0d120f; }
+    .mode-option { flex: 1; min-height: 35px; border: 0; border-radius: 8px; color: #91a091; background: transparent; font-size: 11px; font-weight: 650; }
+    .mode-option[aria-pressed="true"] { color: var(--lime-ink); background: var(--lime); }
+    .mode-description { margin: -6px 1px 12px; color: var(--dim); font-size: 10px; line-height: 1.6; }
+    .tag-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 9px 0 15px; }
+    .tag-tools span { margin-right: 2px; color: var(--dim); font-size: 10px; }
+    .tag-chip { padding: 5px 8px; border: 1px solid #303a31; border-radius: 7px; color: #b7c3b6; background: #151b16; font: 10px ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .tag-chip:hover { border-color: #718e54; color: var(--lime); }
+    .multi-style-grid, .speaker-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .speaker-card { padding: 12px; border: 1px solid #2d382f; border-radius: 11px; background: rgba(10,14,11,.48); }
+    .speaker-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; color: #dce5db; font-size: 11px; font-weight: 700; }
+    .speaker-badge { display: grid; width: 23px; height: 23px; place-items: center; border: 1px solid rgba(196,242,124,.22); border-radius: 7px; color: var(--lime); background: rgba(196,242,124,.06); font-size: 10px; }
+    .speaker-card textarea { min-height: 68px; padding: 9px; font-size: 11px; }
+    .speaker-card .field-label { margin: 0 0 7px; font-size: 10px; }
+    .speaker-id { min-height: 34px; margin-top: 8px; padding: 0 8px; font-size: 9px; }
+    .tag-tools .tag-chip { padding: 5px 7px; }
+    .compose-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 17px; }
+    .privacy-note { max-width: 310px; color: var(--dim); font-size: 10px; line-height: 1.7; }
+    .primary-button { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 46px; padding: 0 17px; border: 0; border-radius: 11px; color: var(--lime-ink); background: var(--lime); font-size: 12px; font-weight: 800; box-shadow: 0 7px 20px rgba(150,203,95,.12); transition: transform .15s ease, filter .15s ease, opacity .15s ease; }
+    .primary-button:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.06); }
+    .primary-button:disabled { cursor: not-allowed; opacity: .42; box-shadow: none; }
+    .primary-button svg { width: 17px; height: 17px; }
+    .settings-panel .panel-heading { margin-bottom: 18px; }
+    .secure-note { display: flex; align-items: flex-start; gap: 9px; margin: -3px 0 19px; padding: 11px; border: 1px solid rgba(145,219,194,.17); border-radius: 10px; color: #a8c9bb; background: rgba(72,134,108,.07); font-size: 10px; line-height: 1.65; }
+    .secure-note svg { width: 14px; height: 14px; flex: 0 0 auto; margin-top: 1px; color: var(--mint); }
+    .key-row { display: flex; gap: 7px; }
+    .key-row input { min-width: 0; min-height: 41px; padding: 0 11px; font-size: 12px; }
+    .reveal-button { min-width: 54px; border: 1px solid #303b32; border-radius: 10px; color: #bec8bd; background: #171e19; font-size: 10px; }
+    .reveal-button:hover { color: var(--lime); border-color: #5c7544; }
+    .key-help { margin: 8px 1px 2px; color: var(--dim); font-size: 10px; line-height: 1.6; }
+    .key-help a { color: #b9ccaf; text-underline-offset: 3px; }
+    .divider { height: 1px; margin: 20px 0; background: var(--line); }
+    .select-wrap { position: relative; }
+    select { min-height: 43px; padding: 0 34px 0 11px; appearance: none; font-size: 11px; cursor: pointer; }
+    select option, select optgroup { color: var(--text); background: #101511; }
+    .select-wrap::after { position: absolute; top: 14px; right: 13px; width: 8px; height: 8px; border-right: 1px solid #a5b2a4; border-bottom: 1px solid #a5b2a4; content: ""; pointer-events: none; transform: rotate(45deg); }
+    .model-note { min-height: 32px; margin: 7px 2px 0; color: var(--dim); font-size: 10px; line-height: 1.55; }
+    .voice-footnote { display: flex; gap: 8px; margin: 10px 1px 0; color: var(--dim); font-size: 10px; line-height: 1.6; }
+    .voice-footnote b { color: #c2d0bf; font-weight: 600; }
+    .voice-id-wrap { margin-top: 11px; }
+    .voice-id-wrap input { min-height: 39px; padding: 0 10px; font-size: 11px; }
+    .voice-id-help { margin: 6px 1px 0; color: var(--dim); font-size: 9px; line-height: 1.6; }
+    .library-box { margin-top: 17px; padding: 12px; border: 1px solid #2e392f; border-radius: 11px; background: rgba(10,14,11,.38); }
+    .library-head { display: flex; align-items: center; justify-content: space-between; gap: 9px; margin-bottom: 9px; }
+    .library-head strong { font-size: 11px; }
+    .library-head a { color: #b5c9a9; font-size: 9px; text-underline-offset: 3px; }
+    .library-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .library-filters input, .library-filters select { min-height: 35px; padding: 0 8px; font-size: 10px; }
+    .library-filters .select-wrap::after { top: 11px; right: 10px; }
+    .library-actions { display: flex; gap: 7px; margin-top: 8px; }
+    .library-actions .secondary-button { flex: 1; justify-content: center; min-height: 32px; font-size: 9px; }
+    .library-status { min-height: 18px; margin: 8px 1px 0; color: var(--dim); font-size: 9px; line-height: 1.5; }
+    .voice-results { display: grid; gap: 6px; max-height: 245px; overflow: auto; margin-top: 7px; }
+    .voice-result { width: 100%; padding: 8px 9px; border: 1px solid #2d382f; border-radius: 8px; color: #d4dfd2; background: #131a14; text-align: left; }
+    .voice-result:hover { border-color: #758f57; background: #19221a; }
+    .voice-result strong { display: block; color: var(--lime); font-size: 10px; }
+    .voice-result small { display: block; margin-top: 3px; color: var(--muted); font-size: 9px; line-height: 1.45; }
+    .stream-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0 2px; }
+    .stream-copy strong { display: block; color: #dce5db; font-size: 10px; }
+    .stream-copy small { display: block; margin-top: 4px; color: var(--dim); font-size: 9px; line-height: 1.5; }
+    .toggle { position: relative; display: inline-flex; flex: 0 0 auto; align-items: center; }
+    .toggle input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    .toggle-track { position: relative; display: block; width: 38px; height: 22px; border: 1px solid #475348; border-radius: 99px; background: #1b241d; transition: background .18s ease; }
+    .toggle-track::after { position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; content: ""; background: #849184; transition: transform .18s ease, background .18s ease; }
+    .toggle input:checked + .toggle-track { border-color: var(--lime); background: rgba(196,242,124,.24); }
+    .toggle input:checked + .toggle-track::after { background: var(--lime); transform: translateX(16px); }
+    .toggle input:focus-visible + .toggle-track { outline: 2px solid var(--lime); outline-offset: 2px; }
+    .cancel-button { display: none; min-height: 32px; padding: 0 10px; border: 1px solid #73514b; border-radius: 8px; color: #ffb0a5; background: rgba(123,58,49,.12); font-size: 10px; }
+    .cancel-button:hover { border-color: #b67469; }
+    .output { margin-top: 17px; padding: 17px; border: 1px solid #303b32; border-radius: 13px; background: rgba(9,13,10,.56); }
+    .output-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .output-title { display: flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 700; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--dim); }
+    .status-dot.ready { background: var(--lime); box-shadow: 0 0 12px rgba(196,242,124,.7); }
+    .status-dot.busy { background: #efc36f; animation: blink .8s ease-in-out infinite alternate; }
+    @keyframes blink { to { opacity: .3; } }
+    .output-meta { color: var(--dim); font-size: 10px; }
+    .empty-output { display: flex; align-items: center; gap: 12px; min-height: 69px; color: var(--dim); font-size: 11px; line-height: 1.65; }
+    .empty-icon { display: grid; width: 38px; height: 38px; flex: 0 0 auto; place-items: center; border: 1px solid #2c372e; border-radius: 12px; color: #9ca99a; background: #131915; }
+    .empty-icon svg { width: 17px; height: 17px; }
+    .audio-player { display: none; width: 100%; height: 39px; accent-color: var(--lime); }
+    .audio-actions { display: none; justify-content: flex-end; gap: 8px; margin-top: 10px; }
+    .secondary-button { display: inline-flex; align-items: center; gap: 7px; min-height: 33px; padding: 0 10px; border: 1px solid #344036; border-radius: 8px; color: #c4d1c2; background: #151c16; font-size: 10px; text-decoration: none; }
+    .secondary-button:hover { border-color: #708d55; color: var(--lime); }
+    .secondary-button svg { width: 13px; height: 13px; }
+    .error-box { display: none; margin-top: 12px; padding: 11px 12px; border: 1px solid rgba(255,156,144,.3); border-radius: 9px; color: var(--danger); background: rgba(132,51,43,.11); font-size: 11px; line-height: 1.65; overflow-wrap: anywhere; }
+    .discord { margin: 25px 0 28px; border: 1px solid rgba(255,255,255,.07); border-radius: 13px; background: rgba(255,255,255,.018); }
+    .discord summary { padding: 13px 16px; color: var(--muted); font-size: 11px; cursor: pointer; }
+    .discord iframe { display: block; width: min(100% - 24px, 350px); height: 420px; margin: 0 12px 12px; border: 0; border-radius: 9px; }
+    footer { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 18px 0 27px; border-top: 1px solid rgba(255,255,255,.07); color: var(--dim); font-size: 10px; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 16px; }
+    .footer-links a { text-decoration: none; }
+    .footer-links a:hover { color: var(--lime); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 28px, 600px); }
+      .topbar { min-height: 64px; }
+      .top-links { gap: 11px; }
+      .top-pill { display: none; }
+      .hero { padding: 38px 0 26px; }
+      .hero-art { flex-basis: 118px; height: 84px; border-radius: 15px; }
+      .hero-art::before { width: 110px; height: 110px; }
+      .hero-art::after { width: 145px; height: 145px; }
+      .app-grid { grid-template-columns: 1fr; gap: 13px; }
+      .compose-panel { padding: 19px; }
+      .settings-panel { padding: 19px; }
+      .settings-panel { order: -1; }
+      .settings-panel .divider { margin: 16px 0; }
+      .speaker-grid, .multi-style-grid { gap: 8px; }
+      textarea { min-height: 170px; }
+    }
+    @media (max-width: 480px) {
+      .shell { width: calc(100% - 24px); }
+      .hero { gap: 10px; padding-top: 31px; }
+      .hero-art { flex-basis: 68px; height: 68px; }
+      .hero-art::before { width: 88px; height: 88px; }
+      .hero-art::after { width: 120px; height: 120px; }
+      .wave-mark { transform: scale(.72); }
+      .hero-copy { font-size: 12px; }
+      .compose-actions { align-items: stretch; flex-direction: column; }
+      .privacy-note { max-width: none; }
+      .primary-button { width: 100%; }
+      footer { align-items: flex-start; flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="Koe Lab ホーム">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 10v4m4-8v12m4-15v18m4-13v8m4-10v12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        </span>
+        <span>KOE LAB <span style="color:#718071;font-weight:500">/ TTS PLAYGROUND</span></span>
+      </a>
+      <nav class="top-links" aria-label="メインナビゲーション">
+        <span class="top-pill">Gemini 3.8 Flash TTS</span>
+        <a href="https://ai.google.dev/gemini-api/docs/speech-generation" target="_blank" rel="noopener noreferrer">使い方 ↗</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <div class="eyebrow">A LITTLE STUDIO FOR BIG VOICES</div>
+          <h1 id="page-title">言葉に、<span>声を宿す。</span></h1>
+          <p class="hero-copy">文章と声を選んで、読み上げを試してみよう。ナレーションも、ささやきも、思いついた雰囲気のままに。</p>
+        </div>
+        <div class="hero-art" aria-hidden="true"><div class="wave-mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      </section>
+
+      <div class="app-grid">
+        <section class="panel compose-panel" aria-labelledby="compose-title">
+          <div class="panel-heading">
+            <div><div class="mini-label">01 / WRITE & DIRECT</div><h2 id="compose-title">読ませるテキスト</h2></div>
+            <span class="step-number" aria-hidden="true">01</span>
+          </div>
+
+          <div class="mode-switch" role="group" aria-label="読み上げモード">
+            <button class="mode-option" id="single-mode-button" type="button" aria-pressed="true">ひとり語り</button>
+            <button class="mode-option" id="dialogue-mode-button" type="button" aria-pressed="false">2人の会話</button>
+          </div>
+          <p class="mode-description" id="mode-description">文章をそのまま読み上げます。声の調子や速度は演出欄で調整できます。</p>
+
+          <div class="samples" aria-label="例文を入れる">
+            <span class="samples-caption">まずは試す</span>
+            <button class="chip sample-button" type="button" data-sample="0">✦ 夕暮れのひとこと</button>
+            <button class="chip sample-button" type="button" data-sample="1">☼ お知らせ</button>
+            <button class="chip sample-button" type="button" data-sample="2">☾ ちょっと不思議</button>
+            <button class="chip sample-button" type="button" data-sample="3">↔ 会話の例</button>
+          </div>
+
+          <label class="field-label" for="transcript"><span id="transcript-label">読み上げる文章</span><span class="field-hint" id="transcript-hint">入力した文をそのまま読みます</span></label>
+          <textarea id="transcript" maxlength="8000" placeholder="ここに文章を入力…" spellcheck="false">雨上がりの街に、ネオンがゆっくり灯りはじめる。今日のことは今日のうちに。深呼吸をひとつして、また歩き出そう。</textarea>
+          <div class="counter-row"><span>日本語・英語などに対応</span><span><strong id="char-count">0</strong> / 8,000</span></div>
+
+          <div class="tag-tools" aria-label="発声タグを挿入"><span>ポイント発声</span><button class="tag-chip" type="button" data-tag="&lt;short pause&gt;">短い間</button><button class="tag-chip" type="button" data-tag="&lt;long pause&gt;">長い間</button><button class="tag-chip" type="button" data-tag="&lt;breath&gt;">息</button><button class="tag-chip" type="button" data-tag="&lt;sigh&gt;">ため息</button><button class="tag-chip" type="button" data-tag="&lt;chuckle&gt;">笑い</button><button class="tag-chip" type="button" data-tag="&lt;gasp&gt;">驚き</button><button class="tag-chip" type="button" data-tag="&lt;cough&gt;">咳</button><button class="tag-chip" type="button" data-tag="|うん|">重なり反応</button></div>
+          <p class="voice-id-help" style="margin-top:-7px;margin-bottom:12px">発声タグは英語で入力します。会話中の重なり反応には |oh hmm| のようにパイプを使います。</p>
+
+          <div id="single-style-group">
+            <label class="field-label" for="style">声の演出 <span class="field-hint">声の雰囲気や話し方を指示</span></label>
+            <div class="style-presets" aria-label="演出の例">
+            <button class="style-chip" type="button" data-style="落ち着いた日本語の朗読。自然な間を取り、やわらかく聞き取りやすい声で。">朗読</button>
+            <button class="style-chip" type="button" data-style="明るく弾むような、短い広告ナレーション。最後を印象的に。">CM風</button>
+            <button class="style-chip" type="button" data-style="静かで親密な距離感のささやき声。ゆっくり、息づかいを感じるように。">ささやき</button>
+            <button class="style-chip" type="button" data-style="感情豊かでテンポのよい、前向きなアニメキャラクターの声。">アニメ風</button>
+            </div>
+            <textarea class="style-area" id="style" maxlength="500" placeholder="例：落ち着いた低めの声で、ゆっくりと。演出なしなら空欄に。">落ち着いた日本語の朗読。自然な間を取り、やわらかく聞き取りやすい声で。</textarea>
+          </div>
+
+          <div id="dialogue-style-group" hidden>
+            <div class="field-label"><span>話者ごとの演出</span><span class="field-hint">A / B の行ごとに反映</span></div>
+            <div class="multi-style-grid">
+              <div class="speaker-card"><div class="speaker-card-head"><span>A の演出</span><span class="speaker-badge">A</span></div><textarea id="style-a" maxlength="300" placeholder="例：落ち着いて、やさしく。"></textarea></div>
+              <div class="speaker-card"><div class="speaker-card-head"><span>B の演出</span><span class="speaker-badge">B</span></div><textarea id="style-b" maxlength="300" placeholder="例：明るく、少し早口で。"></textarea></div>
+            </div>
+            <p class="voice-id-help">会話は各行の先頭に A: または B: を付けます。話者ごとに声と話し方を変えられます。</p>
+          </div>
+
+          <div class="compose-actions">
+            <div class="privacy-note">文章は生成のためGoogle Gemini APIへ送信されます。入力内容はこのページには保存しません。</div>
+            <button class="primary-button" id="generate-button" type="button" disabled>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13m-5-5 5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>音声をつくる</span>
+            </button>
+          </div>
+
+          <div class="output" aria-live="polite">
+            <div class="output-top">
+              <div class="output-title"><span class="status-dot" id="status-dot"></span><span id="status-title">ここに音声が届きます</span></div>
+              <div style="display:flex;align-items:center;gap:9px"><button class="cancel-button" id="cancel-button" type="button">中止</button><span class="output-meta" id="output-meta"></span></div>
+            </div>
+            <div class="empty-output" id="empty-output">
+              <span class="empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M11 5 6 9H3v6h3l5 4V5Zm4 4a4 4 0 0 1 0 6m3-9a8 8 0 0 1 0 12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span id="empty-copy">APIキーを入力して「音声をつくる」を押してください。生成した音声はここで再生できます。</span>
+            </div>
+            <audio class="audio-player" id="audio-player" controls preload="metadata" aria-label="生成した音声"></audio>
+            <div class="audio-actions" id="audio-actions">
+              <button class="secondary-button" id="copy-text-button" type="button"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" stroke="currentColor" stroke-width="1.7"/></svg>文章をコピー</button>
+              <a class="secondary-button" id="download-button" href="#" download="koe-lab-gemini-tts.wav"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v3h14v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>WAVを保存</a>
+            </div>
+            <div class="error-box" id="error-box" role="alert"></div>
+          </div>
+        </section>
+
+        <aside class="panel settings-panel" aria-labelledby="settings-title">
+          <div class="panel-heading">
+            <div><div class="mini-label">02 / PICK YOUR SOUND</div><h2 id="settings-title">声のセッティング</h2></div>
+            <span class="step-number" aria-hidden="true">02</span>
+          </div>
+
+          <div class="secure-note">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3m-11 0h12a2 2 0 0 1 2 2v8H4v-8a2 2 0 0 1 2-2Zm5 4v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>APIキーは入力中だけ使用し、保存しません。ページからGoogleへ直接送信され、GitHubやこのサイトのサーバーには送られません。</span>
+          </div>
+
+          <label class="field-label" for="api-key">Gemini APIキー <span class="field-hint">必須</span></label>
+          <div class="key-row">
+            <input id="api-key" type="password" placeholder="AIza…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="key-help">
+            <button class="reveal-button" id="toggle-key" type="button" aria-pressed="false">表示</button>
+          </div>
+          <p class="key-help" id="key-help">キーがない場合は <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">Google AI Studioで作成 ↗</a></p>
+
+          <div class="divider"></div>
+
+          <label class="field-label" for="model">モデル</label>
+          <div class="select-wrap">
+            <select id="model">
+              <option value="gemini-3.8-flash-tts">Gemini 3.8 Flash TTS</option>
+              <option value="gemini-3.8-flash-lite-tts">Gemini 3.8 Flash-Lite TTS</option>
+              <option value="gemini-3.1-flash-tts-preview">Gemini 3.1 Flash TTS Preview（旧モデル）</option>
+              <option value="gemini-2.5-flash-preview-tts">Gemini 2.5 Flash Preview TTS（旧モデル）</option>
+            </select>
+          </div>
+          <p class="model-note" id="model-note">表現の細かさ、声のニュアンスを試したいときに。</p>
+
+          <div id="single-voice-group">
+            <label class="field-label" for="voice">ボイス</label>
+            <div class="select-wrap">
+              <select id="voice">
+              <optgroup label="おすすめ">
+                <option value="Kore" selected>Kore — 力強く、芯のある声</option>
+                <option value="Aoede">Aoede — 軽やかで爽やか</option>
+                <option value="Puck">Puck — 弾むように元気</option>
+                <option value="Charon">Charon — 落ち着いた案内役</option>
+                <option value="Zephyr">Zephyr — 明るく澄んだ声</option>
+                <option value="Fenrir">Fenrir — 熱量のある声</option>
+                <option value="Leda">Leda — 若々しく軽快</option>
+                <option value="Achernar">Achernar — やさしく柔らか</option>
+              </optgroup>
+              <optgroup label="すべてのプリビルトボイス">
+                <option value="Algieba">Algieba — なめらか</option>
+                <option value="Algenib">Algenib — かすれた低音</option>
+                <option value="Alnilam">Alnilam — はっきり力強い</option>
+                <option value="Autonoe">Autonoe — 明るく軽やか</option>
+                <option value="Callirrhoe">Callirrhoe — おおらか</option>
+                <option value="Despina">Despina — なめらか</option>
+                <option value="Enceladus">Enceladus — 息づかいのある声</option>
+                <option value="Erinome">Erinome — 明瞭ですっきり</option>
+                <option value="Gacrux">Gacrux — 落ち着いた大人の声</option>
+                <option value="Iapetus">Iapetus — クリアで明快</option>
+                <option value="Laomedeia">Laomedeia — 明るく弾む</option>
+                <option value="Orus">Orus — 力強く安定</option>
+                <option value="Pulcherrima">Pulcherrima — 前へ出る声</option>
+                <option value="Rasalgethi">Rasalgethi — 説明が上手な声</option>
+                <option value="Sadachbia">Sadachbia — 生き生きとした声</option>
+                <option value="Sadaltager">Sadaltager — 知的で落ち着いた声</option>
+                <option value="Schedar">Schedar — くせのない自然な声</option>
+                <option value="Sulafat">Sulafat — あたたかい声</option>
+                <option value="Umbriel">Umbriel — おおらか</option>
+                <option value="Vindemiatrix">Vindemiatrix — 穏やかでやさしい</option>
+                <option value="Zubenelgenubi">Zubenelgenubi — カジュアル</option>
+              </optgroup>
+              </select>
+            </div>
+            <div class="voice-id-wrap">
+              <label class="field-label" for="voice-single-id">カスタム / ライブラリ Voice ID <span class="field-hint">任意</span></label>
+              <input id="voice-single-id" type="text" placeholder="voice_… / voicekey_… / voices/…" autocomplete="off" spellcheck="false">
+              <p class="voice-id-help">Voice Design・Voice Replication・追加ライブラリで取得したIDを使えます。</p>
+            </div>
+          </div>
+
+          <div id="dialogue-voice-group" hidden>
+            <div class="speaker-grid">
+              <div class="speaker-card">
+                <div class="speaker-card-head"><span>A の声</span><span class="speaker-badge">A</span></div>
+                <label class="sr-only" for="voice-a">話者Aのボイス</label>
+                <div class="select-wrap"><select id="voice-a"></select></div>
+                <input id="voice-a-id" class="speaker-id" type="text" maxlength="200" placeholder="カスタム Voice ID（任意）" autocomplete="off" spellcheck="false" aria-label="話者AのカスタムVoice ID">
+              </div>
+              <div class="speaker-card">
+                <div class="speaker-card-head"><span>B の声</span><span class="speaker-badge">B</span></div>
+                <label class="sr-only" for="voice-b">話者Bのボイス</label>
+                <div class="select-wrap"><select id="voice-b"></select></div>
+                <input id="voice-b-id" class="speaker-id" type="text" maxlength="200" placeholder="カスタム Voice ID（任意）" autocomplete="off" spellcheck="false" aria-label="話者BのカスタムVoice ID">
+              </div>
+            </div>
+            <p class="voice-id-help">複数話者の一回生成ではプリビルトボイスを使います。カスタムVoice IDはひとり語りで選べます。</p>
+          </div>
+          <div class="voice-footnote"><span aria-hidden="true">✦</span><span>ボイスの印象は英語表記の説明をもとにした目安です。テキストの言語や演出で聞こえ方が変わります。</span></div>
+
+          <div class="library-box">
+            <div class="library-head"><strong>Extended Voice Library</strong><a href="https://ai.google.dev/gemini-api/docs/speech-generation" target="_blank" rel="noopener noreferrer">ガイド ↗</a></div>
+            <div class="library-filters">
+              <input id="voice-search" type="text" placeholder="キーワードで探す" aria-label="ボイス検索キーワード">
+              <input id="voice-language" type="text" placeholder="言語コード (ja-JP)" aria-label="言語コード">
+            </div>
+            <div class="library-filters" style="margin-top:7px">
+              <div class="select-wrap"…2117 tokens truncated…let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+        return bytes;
+      }
+      function concatBytes(chunks) {
+        let length = 0;
+        chunks.forEach(function (chunk) { length += chunk.length; });
+        const result = new Uint8Array(length);
+        let offset = 0;
+        chunks.forEach(function (chunk) { result.set(chunk, offset); offset += chunk.length; });
+        return result;
+      }
+      function audioParts(payload) {
+        const found = [];
+        if (!payload) return found;
+        if (Array.isArray(payload)) {
+          payload.forEach(function (item) { found.push.apply(found, audioParts(item)); });
+          return found;
+        }
+        const candidates = payload.candidates || (payload.response && payload.response.candidates) || [];
+        candidates.forEach(function (candidate) {
+          const parts = candidate.content && candidate.content.parts ? candidate.content.parts : [];
+          parts.forEach(function (part) {
+            const inline = part.inlineData || part.inline_data;
+            if (inline && inline.data) found.push({ data: inline.data, mimeType: inline.mimeType || inline.mime_type || "" });
+          });
+        });
+        const delta = payload.delta || (payload.data && payload.data.delta);
+        if (delta && delta.type === "audio" && delta.data) found.push({ data: delta.data, mimeType: delta.mimeType || delta.mime_type || "" });
+        const steps = payload.steps || [];
+        steps.forEach(function (step) {
+          (step.content || []).forEach(function (part) {
+            if (part.type === "audio" && part.data) found.push({ data: part.data, mimeType: part.mimeType || part.mime_type || "" });
+          });
+        });
+        return found;
+      }
+      function responseErrorText(payload) {
+        return payload && payload.error && payload.error.message ? payload.error.message : (payload && payload.message ? payload.message : "");
+      }
+      function friendlyApiError(status, message) {
+        const clean = (message || "").replace(/AIza[\w-]{20,}/g, "[APIキー]");
+        if (status === 401 || status === 403) return "APIキーを確認してください。Gemini APIが有効なキーか、Google AI Studioで利用できる設定かを確認してください。";
+        if (status === 429) return "APIの利用上限に達したようです。少し時間を置くか、Google AI Studioで利用状況を確認してください。";
+        if (status === 400) return "リクエストを受け付けられませんでした。文章を短くするか、声・モデル・演出の組み合わせを見直してください。" + (clean ? "\n詳細: " + clean : "");
+        if (status >= 500) return "Gemini API側で一時的なエラーが発生しました。少し待ってから再試行してください。";
+        return clean || "音声を生成できませんでした。APIキーと入力内容を確認してください。";
+      }
+      function getModelLabel() {
+        return modelSelect.options[modelSelect.selectedIndex].text.split("（")[0];
+      }
+      function selectedVoice(selectElement, customId) {
+        return customId && customId.value.trim() ? customId.value.trim() : selectElement.value;
+      }
+      function parseDialogue(script) {
+        const turns = [];
+        const lines = script.split(/\r?\n/);
+        for (let i = 0; i < lines.length; i += 1) {
+          const line = lines[i];
+          if (!line.trim()) continue;
+          const match = line.match(/^\s*([AB])\s*:\s*(.*)$/i);
+          if (match) {
+            const speaker = match[1].toUpperCase();
+            if (!match[2].trim()) throw new Error("" + (i + 1) + "行目の「" + speaker + ":」のあとに文章を入力してください。");
+            turns.push({ speaker: speaker, text: match[2].trim() });
+          } else if (turns.length) {
+            turns[turns.length - 1].text += "\n" + line.trim();
+          } else {
+            throw new Error("会話の各行は A: または B: から始めてください。例：A: こんにちは");
+          }
+        }
+        if (turns.length < 2) throw new Error("会話モードでは、A と B の発話を少なくとも1つずつ入力してください。");
+        if (!turns.some(function (turn) { return turn.speaker === "A"; }) || !turns.some(function (turn) { return turn.speaker === "B"; })) {
+          throw new Error("会話に A と B の両方の発話を入れてください。");
+        }
+        return turns;
+      }
+      function setMode(nextMode, preserveText) {
+        if (nextMode === mode) return;
+        const previousMode = mode;
+        mode = nextMode;
+        const dialogue = mode === "dialogue";
+        byId("single-mode-button").setAttribute("aria-pressed", String(!dialogue));
+        byId("dialogue-mode-button").setAttribute("aria-pressed", String(dialogue));
+        byId("single-style-group").hidden = dialogue;
+        byId("dialogue-style-group").hidden = !dialogue;
+        byId("single-voice-group").hidden = dialogue;
+        byId("dialogue-voice-group").hidden = !dialogue;
+        byId("transcript-label").textContent = dialogue ? "会話スクリプト" : "読み上げる文章";
+        byId("transcript-hint").textContent = dialogue ? "各行を A: / B: で指定" : "入力した文をそのまま読みます";
+        byId("mode-description").textContent = dialogue
+          ? "行ごとに話者を切り替えます。A: と B: の各ターンに、別々の声と演出を割り当てます。"
+          : "文章をそのまま読み上げます。声の調子や速度は演出欄で調整できます。";
+        if (!preserveText) {
+          if (dialogue && previousMode === "single" && !/^\s*[AB]\s*:/im.test(transcriptInput.value)) {
+            transcriptInput.value = samples[3].text;
+            byId("style-a").value = samples[3].styleA;
+            byId("style-b").value = samples[3].styleB;
+          } else if (!dialogue && previousMode === "dialogue") {
+            transcriptInput.value = transcriptInput.value.replace(/^\s*[AB]\s*:\s*/gim, "").trim();
+          }
+        }
+        byId("voice-target").value = dialogue ? "A" : "single";
+        updateCount();
+      }
+      function updateModelFeatures() {
+        const current = isCurrentModel(modelSelect.value);
+        const legacyId = modelSelect.value === "gemini-3.1-flash-tts-preview";
+        modelNote.textContent = modelSelect.value === "gemini-3.8-flash-lite-tts"
+          ? "軽快さや手早い試作を重視するときに。Flashと同じ音声設定で切り替えられます。"
+          : current
+            ? "表現の細かさ、声のニュアンス、複雑な会話を試したいときに。"
+            : legacyId
+              ? "旧プレビュー版です。現在は3.8 Flash / Flash-Liteが推奨されています。"
+              : "旧モデルです。利用権限や利用上限がアカウントによって異なる場合があります。";
+        [byId("voice-single-id"), byId("voice-a-id"), byId("voice-b-id")].forEach(function (input) { input.disabled = !current; });
+        formatSelect.disabled = !current;
+        sampleRateSelect.disabled = !current;
+        if (!current) {
+          streamCheckbox.checked = false;
+          streamCheckbox.disabled = true;
+          formatNote.textContent = "旧モデルでは標準音声形式を使います。追加Voice ID・出力形式・サンプルレート・ストリーミングは3.8系で利用できます。";
+        } else {
+          streamCheckbox.disabled = false;
+          formatNote.textContent = "WAVはそのまま再生できます。PCM・μ-law・A-lawは元形式で保存し、試聴用にWAVへ包んで再生します。";
+        }
+        syncStreamFormat();
+      }
+      function syncStreamFormat() {
+        const current = isCurrentModel(modelSelect.value);
+        if (current && streamCheckbox.checked) {
+          formatSelect.value = "AUDIO_L16";
+          formatSelect.disabled = true;
+          formatNote.textContent = "ストリーミングはL16 PCMで受信します。再生用にWAVへ包み、ダウンロードはPCMのまま保存します。";
+        } else if (current) {
+          formatSelect.disabled = false;
+          formatNote.textContent = "WAVはそのまま再生できます。PCM・μ-law・A-lawは元形式で保存し、試聴用にWAVへ包んで再生します。";
+        }
+      }
+      function voiceStyleFor(speaker) {
+        return byId(speaker === "A" ? "style-a" : "style-b").value.trim();
+      }
+      function currentPartsForSingle(text) {
+        const part = { text: text };
+        const style = styleInput.value.trim();
+        if (style) part.speech_metadata = { style: style };
+        return [part];
+      }
+      function currentPartsForDialogue(turns) {
+        return turns.map(function (turn) {
+          const part = { text: turn.text };
+          const metadata = { speaker: turn.speaker };
+          const style = voiceStyleFor(turn.speaker);
+          if (style) metadata.style = style;
+          part.speech_metadata = metadata;
+          return part;
+        });
+      }
+      function legacyPromptForSingle(text) {
+        const style = styleInput.value.trim();
+        return style ? "Read the following transcript with this delivery: " + style + "\n\n" + text : text;
+      }
+      function legacyPromptForDialogue(turns) {
+        const notes = [];
+        const styleA = voiceStyleFor("A");
+        const styleB = voiceStyleFor("B");
+        if (styleA) notes.push("Speaker A delivery: " + styleA);
+        if (styleB) notes.push("Speaker B delivery: " + styleB);
+        const script = "TTS the following conversation between speaker A and speaker B:\n" + turns.map(function (turn) { return turn.speaker + ": " + turn.text; }).join("\n");
+        return (notes.length ? notes.join("\n") + "\n\n" : "") + script;
+      }
+      function currentSpeechConfigSingle(voiceId) {
+        return { voiceConfig: { voice: voiceId } };
+      }
+      function currentSpeechConfigMulti(voiceA, voiceB) {
+        return { multiSpeakerVoiceConfig: { speakerVoiceConfigs: [
+          { speaker: "A", voiceConfig: { voice: voiceA } },
+          { speaker: "B", voiceConfig: { voice: voiceB } }
+        ] } };
+      }
+      function legacySpeechConfigSingle(voiceName) {
+        return { voiceConfig: { prebuiltVoiceConfig: { voiceName: voiceName } } };
+      }
+      function legacySpeechConfigMulti(voiceA, voiceB) {
+        return { multiSpeakerVoiceConfig: { speakerVoiceConfigs: [
+          { speaker: "A", voiceConfig: { prebuiltVoiceConfig: { voiceName: voiceA } } },
+          { speaker: "B", voiceConfig: { prebuiltVoiceConfig: { voiceName: voiceB } } }
+        ] } };
+      }
+      function generationConfig(speechConfig, audioFormat, sampleRate, currentModel) {
+        const config = { responseModalities: ["AUDIO"], speechConfig: speechConfig };
+        if (currentModel && audioFormat) config.responseFormat = { audio: { mimeType: audioFormat, sampleRate: sampleRate } };
+        return config;
+      }
+      async function readSseAudio(response, onChunk) {
+        if (!response.body || !response.body.getReader) throw new Error("このブラウザはストリーミング音声に対応していません。");
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        const chunks = [];
+        let buffer = "";
+        let eventCount = 0;
+        let mimeType = "audio/L16;codec=pcm;rate=" + sampleRateSelect.value;
+        function consumeRecord(record) {
+          const dataLines = record.split(/\r?\n/).filter(function (line) { return line.indexOf("data:") === 0; }).map(function (line) { return line.slice(5).trim(); });
+          if (!dataLines.length) return;
+          const dataText = dataLines.join("\n");
+          if (!dataText || dataText === "[DONE]") return;
+          let payload;
+          try { payload = JSON.parse(dataText); } catch (_) { return; }
+          const parts = audioParts(payload);
+          parts.forEach(function (part) {
+            chunks.push(toBytes(part.data));
+            if (part.mimeType) mimeType = part.mimeType;
+            eventCount += 1;
+            if (onChunk) onChunk(eventCount, chunks.reduce(function (sum, bytes) { return sum + bytes.length; }, 0));
+          });
+        }
+        while (true) {
+          const result = await reader.read();
+          buffer += decoder.decode(result.value || new Uint8Array(), { stream: !result.done });
+          const records = buffer.split(/\r?\n\r?\n/);
+          buffer = records.pop() || "";
+          records.forEach(consumeRecord);
+          if (result.done) break;
+        }
+        if (buffer.trim()) consumeRecord(buffer);
+        if (!chunks.length) throw new Error("ストリーミング応答に音声データがありませんでした。");
+        return { bytes: concatBytes(chunks), mimeType: mimeType, chunks: eventCount };
+      }
+      async function callGemini(model, body, streaming, apiKey, signal, onChunk) {
+        const endpoint = "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + (streaming ? ":streamGenerateContent?alt=sse" : ":generateContent");
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey, "Accept": streaming ? "text/event-stream" : "application/json" },
+          body: JSON.stringify(body),
+          signal: signal
+        });
+        if (!response.ok) {
+          let payload = {};
+          try { payload = await response.json(); } catch (_) { payload = {}; }
+          throw new Error(friendlyApiError(response.status, responseErrorText(payload)));
+        }
+        if (streaming) return await readSseAudio(response, onChunk);
+        let payload;
+        try { payload = await response.json(); } catch (_) { payload = {}; }
+        if (payload.error) throw new Error(friendlyApiError(response.status, responseErrorText(payload)));
+        const parts = audioParts(payload);
+        if (!parts.length) throw new Error("APIの応答に音声データがありませんでした。選んだモデルがGemini TTSに対応しているか確認してください。");
+        const part = parts[parts.length - 1];
+        return { bytes: toBytes(part.data), mimeType: part.mimeType || "" };
+      }
+      function actualFormat(mimeType, fallback) {
+        const value = (mimeType || "").toLowerCase();
+        if (value.indexOf("mulaw") >= 0 || value.indexOf("mu-law") >= 0) return "AUDIO_MULAW";
+        if (value.indexOf("alaw") >= 0 || value.indexOf("a-law") >= 0) return "AUDIO_ALAW";
+        if (value.indexOf("l16") >= 0 || value.indexOf("pcm") >= 0) return "AUDIO_L16";
+        if (value.indexOf("wav") >= 0 || value.indexOf("wave") >= 0) return "AUDIO_WAV";
+        return fallback || "AUDIO_WAV";
+      }
+      function rateFromMime(mimeType, fallback) {
+        const match = (mimeType || "").match(/(?:rate|sample[-_]?rate)[=/: ](\d{4,6})/i);
+        return match ? Number(match[1]) : fallback;
+      }
+      function stripWavHeader(bytes) {
+        if (bytes.length < 44 || String.fromCharCode(bytes[0], bytes[1], bytes[2], bytes[3]) !== "RIFF") return bytes;
+        let offset = 12;
+        while (offset + 8 <= bytes.length) {
+          const name = String.fromCharCode(bytes[offset], bytes[offset + 1], bytes[offset + 2], bytes[offset + 3]);
+          const size = new DataView(bytes.buffer, bytes.byteOffset + offset + 4, 4).getUint32(0, true);
+          if (name === "data") return bytes.subarray(offset + 8, Math.min(bytes.length, offset + 8 + size));
+          offset += 8 + size + (size % 2);
+        }
+        return bytes;
+      }
+      function makeWav(rawBytes, format, sampleRate) {
+        const bytes = stripWavHeader(rawBytes);
+        if (format === "AUDIO_WAV") return new Blob([rawBytes], { type: "audio/wav" });
+        const g711 = format === "AUDIO_MULAW" || format === "AUDIO_ALAW";
+        const bits = g711 ? 8 : 16;
+        const blockAlign = g711 ? 1 : 2;
+        const formatCode = format === "AUDIO_MULAW" ? 7 : format === "AUDIO_ALAW" ? 6 : 1;
+        const factBytes = g711 ? 12 : 0;
+        const fmtBytes = g711 ? 26 : 24;
+        const header = new ArrayBuffer(12 + fmtBytes + factBytes + 8);
+        const view = new DataView(header);
+        const putText = function (offset, value) { for (let i = 0; i < value.length; i += 1) view.setUint8(offset + i, value.charCodeAt(i)); };
+        putText(0, "RIFF");
+        view.setUint32(4, header.byteLength + bytes.length - 8, true);
+        putText(8, "WAVE");
+        putText(12, "fmt ");
+        view.setUint32(16, g711 ? 18 : 16, true);
+        view.setUint16(20, formatCode, true);
+        view.setUint16(22, 1, true);
+        view.setUint32(24, sampleRate, true);
+        view.setUint32(28, sampleRate * blockAlign, true);
+        view.setUint16(32, blockAlign, true);
+        view.setUint16(34, bits, true);
+        if (g711) {
+          view.setUint16(36, 0, true);
+          putText(38, "fact");
+          view.setUint32(42, 4, true);
+          view.setUint32(46, bytes.length, true);
+          putText(50, "data");
+          view.setUint32(54, bytes.length, true);
+        } else {
+          putText(36, "data");
+          view.setUint32(40, bytes.length, true);
+        }
+        return new Blob([header, bytes], { type: "audio/wav" });
+      }
+      function extensionFor(format) {
+        if (format === "AUDIO_L16") return "pcm";
+        if (format === "AUDIO_MULAW") return "mulaw";
+        if (format === "AUDIO_ALAW") return "alaw";
+        return "wav";
+      }
+      function formatLabel(format) {
+        if (format === "AUDIO_L16") return "L16 PCM";
+        if (format === "AUDIO_MULAW") return "μ-law";
+        if (format === "AUDIO_ALAW") return "A-law";
+        return "WAV";
+      }
+      function setOutput(audioResult, requestedFormat, sampleRate, extraMeta) {
+        let format = actualFormat(audioResult.mimeType, requestedFormat);
+        let rate = rateFromMime(audioResult.mimeType, sampleRate);
+        let raw = audioResult.bytes;
+        if (format === "AUDIO_WAV") {
+          const playbackBlob = new Blob([raw], { type: "audio/wav" });
+          installOutput(raw, playbackBlob, "wav", extraMeta, rate);
+          return;
+        }
+        const playbackBlob = makeWav(raw, format, rate);
+        const fileBlob = new Blob([raw], { type: format === "AUDIO_L16" ? "audio/L16" : format === "AUDIO_MULAW" ? "audio/mulaw" : "audio/alaw" });
+        installOutput(fileBlob, playbackBlob, extensionFor(format), extraMeta + " · 試聴用WAV", rate);
+      }
+      function installOutput(fileBlob, playbackBlob, extension, extraMeta, sampleRate) {
+        if (currentAudioUrl) URL.revokeObjectURL(currentAudioUrl);
+        if (currentDownloadUrl) URL.revokeObjectURL(currentDownloadUrl);
+        currentAudioUrl = URL.createObjectURL(playbackBlob);
+        currentDownloadUrl = URL.createObjectURL(fileBlob);
+        audioPlayer.src = currentAudioUrl;
+        audioPlayer.style.display = "block";
+        audioActions.style.display = "flex";
+        downloadButton.href = currentDownloadUrl;
+        downloadButton.download = "koe-lab-" + new Date().toISOString().slice(0, 10) + "." + extension;
+        downloadButton.textContent = "";
+        const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        icon.setAttribute("viewBox", "0 0 24 24");
+        icon.setAttribute("fill", "none");
+        icon.setAttribute("aria-hidden", "true");
+        icon.innerHTML = "<path d=\"M12 3v12m0 0 4-4m-4 4-4-4M5 17v3h14v-3\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>";
+        downloadButton.appendChild(icon);
+        downloadButton.appendChild(document.createTextNode(extension === "wav" ? "WAVを保存" : extension.toUpperCase() + "を保存"));
+        emptyOutput.style.display = "none";
+        const sizeMb = (fileBlob.size / (1024 * 1024)).toFixed(2);
+        setStatus("音声ができました", "ready", getModelLabel() + " · " + sampleRate.toLocaleString("ja-JP") + " Hz · " + sizeMb + " MB" + (extraMeta ? " · " + extraMeta : ""));
+      }
+      async function buildSingleOrPresetAudio(apiKey, controller) {
+        const model = modelSelect.value;
+        const current = isCurrentModel(model);
+        const stream = current && streamCheckbox.checked;
+        const sampleRate = Number(sampleRateSelect.value);
+        const requestedFormat = current ? (stream ? "AUDIO_L16" : formatSelect.value) : "AUDIO_WAV";
+        const turns = mode === "dialogue" ? parseDialogue(transcriptInput.value.trim()) : null;
+        const voiceSingleId = byId("voice-single-id").value.trim();
+        const voiceAId = byId("voice-a-id").value.trim();
+        const voiceBId = byId("voice-b-id").value.trim();
+        if (!current && (voiceSingleId || voiceAId || voiceBId)) {
+          throw new Error("追加Voice IDは3.8 Flash / Flash-Liteで利用できます。旧モデルを使う場合はVoice ID欄を空にしてください。");
+        }
+
+        if (mode === "dialogue" && current && (voiceAId || voiceBId)) {
+          const turnsForSeparateRequests = turns;
+          const requestFormat = requestedFormat === "AUDIO_WAV" ? "AUDIO_L16" : requestedFormat;
+          const chunks = [];
+          let combinedMime = requestFormat === "AUDIO_L16" ? "audio/L16;codec=pcm;rate=" + sampleRate : "audio/" + requestFormat.toLowerCase().replace("audio_", "");
+          for (let i = 0; i < turnsForSeparateRequests.length; i += 1) {
+            const turn = turnsForSeparateRequests[i];
+            const id = turn.speaker === "A" ? (voiceAId || voiceASelect.value) : (voiceBId || voiceBSelect.value);
+            const part = { text: turn.text };
+            const style = voiceStyleFor(turn.speaker);
+            if (style) part.speech_metadata = { style: style };
+            const body = {
+              contents: [{ role: "user", parts: [part] }],
+              generationConfig: generationConfig(currentSpeechConfigSingle(id), requestFormat, sampleRate, true)
+            };
+            setStatus("会話を組み立てています…", "busy", "発話 " + (i + 1) + " / " + turnsForSeparateRequests.length);
+            const result = await callGemini(model, body, stream, apiKey, controller.signal, function (count, size) {
+              setStatus("音声を受信しています…", "busy", "発話 " + (i + 1) + " / " + turnsForSeparateRequests.length + " · " + count + " チャンク");
+            });
+            const resultFormat = actualFormat(result.mimeType, requestFormat);
+            if (resultFormat === "AUDIO_WAV") {
+              chunks.push(stripWavHeader(result.bytes));
+              combinedMime = "audio/L16;codec=pcm;rate=" + sampleRate;
+            } else {
+              chunks.push(result.bytes);
+              if (result.mimeType) combinedMime = result.mimeType;
+            }
+          }
+          return { bytes: concatBytes(chunks), mimeType: combinedMime, requestedFormat: requestedFormat, sampleRate: sampleRate, extraMeta: "会話ターンごとに生成" };
+        }
+
+        let body;
+        if (mode === "dialogue") {
+          const voiceA = voiceASelect.value;
+          const voiceB = voiceBSelect.value;
+          if (current) {
+            body = {
+              contents: [{ role: "user", parts: currentPartsForDialogue(turns) }],
+              generationConfig: generationConfig(currentSpeechConfigMulti(voiceA, voiceB), requestedFormat, sampleRate, true)
+            };
+          } else {
+            body = {
+              contents: [{ role: "user", parts: [{ text: legacyPromptForDialogue(turns) }] }],
+              generationConfig: generationConfig(legacySpeechConfigMulti(voiceA, voiceB), null, sampleRate, false)
+            };
+          }
+        } else {
+          const voice = current ? selectedVoice(voiceSelect, byId("voice-single-id")) : voiceSelect.value;
+          if (current) {
+            body = {
+              contents: [{ role: "user", parts: currentPartsForSingle(transcriptInput.value.trim()) }],
+              generationConfig: generationConfig(currentSpeechConfigSingle(voice), requestedFormat, sampleRate, true)
+            };
+          } else {
+            body = {
+              contents: [{ role: "user", parts: [{ text: legacyPromptForSingle(transcriptInput.value.trim()) }] }],
+              generationConfig: generationConfig(legacySpeechConfigSingle(voice), null, sampleRate, false)
+            };
+          }
+        }
+        const result = await callGemini(model, body, stream, apiKey, controller.signal, function (count, size) {
+          setStatus("音声を受信しています…", "busy", count + " チャンク · " + (size / 1024).toFixed(0) + " KB");
+        });
+        return { bytes: result.bytes, mimeType: result.mimeType, requestedFormat: requestedFormat, sampleRate: sampleRate, extraMeta: stream ? "ストリーミング受信" : "" };
+      }
+      async function generateAudio() {
+        if (generating) return;
+        const apiKey = apiKeyInput.value.trim();
+        if (!apiKey || !transcriptInput.value.trim()) {
+          showError("APIキーと読み上げる文章を入力してください。");
+          return;
+        }
+        clearError();
+        generating = true;
+        updateButton();
+        byId("cancel-button").style.display = "inline-flex";
+        setStatus("音声を生成しています…", "busy", "Geminiへリクエスト中");
+        emptyOutput.style.display = "flex";
+        emptyCopy.textContent = "Geminiが声をつくっています。文章の長さによって少し時間がかかります。";
+        audioPlayer.style.display = "none";
+        audioActions.style.display = "none";
+        currentController = new AbortController();
+        const timeoutId = window.setTimeout(function () { if (currentController) currentController.abort(); }, 180000);
+        try {
+          const result = await buildSingleOrPresetAudio(apiKey, currentController);
+          let resultFormat = actualFormat(result.mimeType, result.requestedFormat);
+          let resultBytes = result.bytes;
+          if (result.requestedFormat === "AUDIO_WAV" && resultFormat !== "AUDIO_WAV") {
+            const waveBlob = makeWav(resultBytes, resultFormat, rateFromMime(result.mimeType, result.sampleRate));
+            resultBytes = new Uint8Array(await waveBlob.arrayBuffer());
+            resultFormat = "AUDIO_WAV";
+            result.mimeType = "audio/wav";
+          }
+          setOutput({ bytes: resultBytes, mimeType: result.mimeType }, resultFormat, result.sampleRate, result.extraMeta);
+        } catch (error) {
+          emptyOutput.style.display = "flex";
+          emptyCopy.textContent = "APIキーや入力内容を見直して、もう一度お試しください。";
+          setStatus("生成できませんでした", "", "");
+          if (error && error.name === "AbortError") showError("生成を中止したか、制限時間を超えました。文章を短くして再試行してください。");
+          else if (error instanceof TypeError) showError("Gemini APIへ接続できませんでした。インターネット接続とAPIキーを確認してください。");
+          else showError(error && error.message ? error.message : "予期しないエラーが発生しました。");
+        } finally {
+          window.clearTimeout(timeoutId);
+          currentController = null;
+          generating = false;
+          byId("cancel-button").style.display = "none";
+          updateButton();
+        }
+      }
+      async function loadVoiceLibrary(nextPage) {
+        const key = apiKeyInput.value.trim();
+        const status = byId("voice-library-status");
+        if (!key) {
+          status.textContent = "先にGemini APIキーを入力してください。";
+          return;
+        }
+        const results = byId("voice-results");
+        if (!nextPage) {
+          results.replaceChildren();
+          nextVoicePageToken = "";
+        }
+        status.textContent = "ボイスを検索しています…";
+        byId("load-voices").disabled = true;
+        byId("load-more-voices").disabled = true;
+        try {
+          const params = new URLSearchParams({ page_size: "50" });
+          const search = byId("voice-search").value.trim();
+          const language = byId("voice-language").value.trim();
+          const type = byId("voice-type").value;
+          const gender = byId("voice-gender").value;
+          const pitch = byId("voice-pitch").value;
+          const context = byId("voice-context").value;
+          const accent = byId("voice-accent").value.trim();
+          if (search) params.set("search", search);
+          if (language) params.set("language_code", language);
+          if (type) params.set("type", type);
+          if (gender) params.set("gender", gender);
+          if (pitch) params.set("pitch", pitch);
+          if (context) params.set("context", context);
+          if (accent) params.set("accent", accent);
+          if (nextPage) params.set("page_token", nextPage);
+          const response = await fetch("https://generativelanguage.googleapis.com/v1beta/voices?" + params.toString(), { headers: { "x-goog-api-key": key } });
+          const payload = await response.json().catch(function () { return {}; });
+          if (!response.ok) throw new Error(friendlyApiError(response.status, responseErrorText(payload)));
+          const voices = payload.voices || [];
+          voices.forEach(function (voice) {
+            const id = voice.id || voice.voice || voice.name;
+            if (!id) return;
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "voice-result";
+            button.dataset.voiceId = id;
+            const name = document.createElement("strong");
+            name.textContent = (voice.display_name || voice.displayName || voice.name || id) + " · 適用";
+            const details = document.createElement("small");
+            details.textContent = [voice.language_code || voice.languageCode, voice.accent, voice.gender, voice.pitch, voice.description].filter(Boolean).join(" / ") || id;
+            button.appendChild(name);
+            button.appendChild(details);
+            button.addEventListener("click", function () {
+              const target = byId("voice-target").value;
+              if (target !== "single" && !isCurrentModel(modelSelect.value)) {
+                status.textContent = "会話でVoice IDを使うには3.8系モデルを選んでください。";
+                return;
+              }
+              if (target === "single") {
+                byId("voice-single-id").value = id;
+                setMode("single", false);
+              } else {
+                byId(target === "A" ? "voice-a-id" : "voice-b-id").value = id;
+                setMode("dialogue", false);
+              }
+              status.textContent = "「" + (voice.display_name || voice.displayName || voice.name || id) + "」を適用しました。";
+            });
+            results.appendChild(button);
+          });
+          nextVoicePageToken = payload.next_page_token || payload.nextPageToken || "";
+          byId("load-more-voices").hidden = !nextVoicePageToken;
+          status.textContent = voices.length ? (voices.length + "件を表示中。声を選ぶとVoice IDに反映します。") : "該当する声がありません。検索条件を変えてください。";
+        } catch (error) {
+          status.textContent = error && error.message ? error.message : "ボイス一覧を取得できませんでした。";
+        } finally {
+          byId("load-voices").disabled = false;
+          byId("load-more-voices").disabled = false;
+        }
+      }
+
+      function cloneVoiceOptions(target, defaultVoice) {
+        target.innerHTML = voiceSelect.innerHTML;
+        target.value = defaultVoice;
+      }
+      cloneVoiceOptions(voiceASelect, "Aoede");
+      cloneVoiceOptions(voiceBSelect, "Puck");
+
+      document.querySelectorAll(".sample-button").forEach(function (button) {
+        button.addEventListener("click", function () {
+          const index = Number(button.dataset.sample);
+          const sample = samples[index];
+          if (!sample) return;
+          if (index === 3) {
+            setMode("dialogue", true);
+            byId("style-a").value = sample.styleA;
+            byId("style-b").value = sample.styleB;
+          } else {
+            setMode("single", true);
+            styleInput.value = sample.style;
+          }
+          transcriptInput.value = sample.text;
+          document.querySelectorAll(".sample-button").forEach(function (item) { item.classList.toggle("active", item === button); });
+          updateCount();
+          transcriptInput.focus();
+        });
+      });
+      document.querySelectorAll(".style-chip").forEach(function (button) {
+        button.addEventListener("click", function () {
+          styleInput.value = button.dataset.style || "";
+          document.querySelectorAll(".style-chip").forEach(function (item) { item.classList.toggle("active", item === button); });
+          styleInput.focus();
+        });
+      });
+      document.querySelectorAll(".tag-chip").forEach(function (button) {
+        button.addEventListener("click", function () {
+          const tag = button.dataset.tag || "";
+          const start = transcriptInput.selectionStart;
+          const end = transcriptInput.selectionEnd;
+          transcriptInput.setRangeText(tag, start, end, "end");
+          transcriptInput.focus();
+          updateCount();
+        });
+      });
+      byId("single-mode-button").addEventListener("click", function () { setMode("single", false); });
+      byId("dialogue-mode-button").addEventListener("click", function () { setMode("dialogue", false); });
+      apiKeyInput.addEventListener("input", updateButton);
+      transcriptInput.addEventListener("input", function () {
+        document.querySelectorAll(".sample-button").forEach(function (item) { item.classList.remove("active"); });
+        updateCount();
+      });
+      generateButton.addEventListener("click", generateAudio);
+      byId("cancel-button").addEventListener("click", function () { if (currentController) currentController.abort(); });
+      byId("toggle-key").addEventListener("click", function () {
+        const reveal = apiKeyInput.type === "password";
+        apiKeyInput.type = reveal ? "text" : "password";
+        byId("toggle-key").textContent = reveal ? "隠す" : "表示";
+        byId("toggle-key").setAttribute("aria-pressed", String(reveal));
+        apiKeyInput.focus();
+      });
+      modelSelect.addEventListener("change", updateModelFeatures);
+      streamCheckbox.addEventListener("change", syncStreamFormat);
+      byId("load-voices").addEventListener("click", function () { loadVoiceLibrary(""); });
+      byId("load-more-voices").addEventListener("click", function () { if (nextVoicePageToken) loadVoiceLibrary(nextVoicePageToken); });
+      copyTextButton.addEventListener("click", async function () {
+        try {
+          await navigator.clipboard.writeText(transcriptInput.value);
+          copyTextButton.textContent = "コピーしました";
+          window.setTimeout(function () { copyTextButton.textContent = "文章をコピー"; }, 1500);
+        } catch (_) {
+          transcriptInput.focus();
+          transcriptInput.select();
+          document.execCommand("copy");
+        }
+      });
+      window.addEventListener("beforeunload", function () {
+        if (currentAudioUrl) URL.revokeObjectURL(currentAudioUrl);
+        if (currentDownloadUrl) URL.revokeObjectURL(currentDownloadUrl);
+      });
+
+      updateModelFeatures();
+      updateCount();
+      updateButton();
+    }());
+  </script>
+</body>
+</html>
